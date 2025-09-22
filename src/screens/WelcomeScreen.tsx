@@ -14,9 +14,10 @@ export default function WelcomeScreen({ navigation }: any) {
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.replace("MainScreen")}
+        onPress={() => navigation.replace("Tabs", { screen: "MainScreen" })} 
       >
-        <Text style={styles.buttonText}>Iniciar</Text>
+
+      <Text style={styles.buttonText}>Iniciar</Text>
       </TouchableOpacity>
     </View>
   );

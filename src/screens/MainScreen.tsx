@@ -1,72 +1,75 @@
-import React from "react";
-import { View, Text, FlatList, TouchableOpacity, Image, StyleSheet, } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, FlatList, TouchableOpacity, Image, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-
-const books = [
-  {
-    id: "1",
-    title: "Livro 1",
-    author: "Autor",
-    image: "https://via.placeholder.com/140x160.png?text=Livro+1",
-  },
-  {
-    id: "2",
-    title: "Livro 2",
-    author: "Autor",
-    image: "https://via.placeholder.com/140x160.png?text=Livro+2",
-  },
-];
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function MainScreen({ navigation }: any) {
+  const [books, setBooks] = useState<any[]>([]);
+
+  const loadBooks = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem("@books");
+      if (jsonValue != null) {
+        setBooks(JSON.parse(jsonValue));
+      }
+    } catch (e) {
+      console.log("Erro ao carregar livros:", e);
+    }
+  };
+
+  const saveBooks = async (booksList: any) => {
+    try {
+      const jsonValue = JSON.stringify(booksList);
+      await AsyncStorage.setItem("@books", jsonValue);
+    } catch (e) {
+      console.log("Erro ao salvar livros:", e);
+    }
+  };
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      loadBooks();
+    });
+    return unsubscribe;
+  }, [navigation]);
+
   const renderBook = ({ item }: any) => (
-    <TouchableOpacity
-      style={styles.card}
-      onPress={() => navigation.navigate("BookDetails", { id: item.id })}
-    >
-      <Image source={{ uri: item.image }} style={styles.cover} resizeMode="cover" />
-      <Text style={styles.bookTitle}>{item.title}</Text>
-    </TouchableOpacity>
-  );
+  <TouchableOpacity
+    style={styles.card}
+    onPress={() => navigation.navigate("IndividualBook", { id: item.id })}
+  >
+    <Image source={{ uri: item.image }} style={styles.cover} resizeMode="cover" />
+    <Text style={styles.bookTitle} numberOfLines={1}>{item.title}</Text>
+    <Text style={styles.bookAuthor} numberOfLines={1}>{item.author}</Text>
+  </TouchableOpacity>
+);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Estante</Text>
+      <Text style={styles.header}>MunnaReads</Text>
       <Text style={styles.subheader}>Últimos adicionados:</Text>
 
-      <FlatList
-        data={books}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        keyExtractor={(i) => i.id}
-        renderItem={renderBook}
-        contentContainerStyle={{ paddingVertical: 40, paddingBottom :300 }}
-      />
+      <View style={{ marginBottom: 20 }}>
+        <FlatList
+          data={[...books].reverse().slice(0, 2)}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={(i) => i.id}
+          renderItem={renderBook}
+          contentContainerStyle={{ paddingVertical: 20 }}
+        />
 
-      <TouchableOpacity style={styles.verMais} onPress={() => navigation.navigate("Shelf")}>
-        <Text style={styles.verMaisText}>Ver mais</Text>
+        <TouchableOpacity 
+          style={styles.verMais} 
+          onPress={() => navigation.navigate("Shelf")}
+        >
+          <Text style={styles.verMaisText}>Ver mais</Text>
+        </TouchableOpacity>
+      </View>
+
+      <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate("AddBook")}>
+        <Ionicons name="add" size={32} color="#fff" />
       </TouchableOpacity>
-
-      <View style={styles.addSection}>
-        <Text style={styles.addLabel}>Adicionar livro</Text>
-        <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate("AddBook")}>
-          <Ionicons name="add" size={28} color="#fff" />
-        </TouchableOpacity>
-      </View>
-
-      {/* bottom tab visual - substitua por Tab Navigator quando quiser */}
-      <View style={styles.bottomNav}>
-        <TouchableOpacity onPress={() => navigation.navigate("Quotes")}>
-          <Ionicons name="star-outline" size={26} color="black" />
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => navigation.navigate("MainScreen")}>
-          <Ionicons name="book-outline" size={26} color="#C78A00" />
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
-          <Ionicons name="person-outline" size={26} color="black" />
-        </TouchableOpacity>
-      </View>
     </View>
   );
 }
@@ -81,41 +84,32 @@ const styles = StyleSheet.create({
     padding: 10,
     marginRight: 12,
     width: 140,
+    height: 180,
     alignItems: "center",
     elevation: 2,
   },
-  cover: { width: 10, height: 50, borderRadius: 8 },
+  cover: { width: 100, height: 100, borderRadius: 8 },
   bookTitle: { fontWeight: "bold", marginTop: 8 },
   bookAuthor: { color: "#666" },
   verMais: {
     backgroundColor: "#FF6F91",
-    alignSelf: "flex-end",
+    alignSelf: "flex-start",
     paddingHorizontal: 20,
     paddingVertical: 8,
     borderRadius: 20,
     marginTop: 10,
   },
   verMaisText: { color: "#fff", fontWeight: "600" },
-  addSection: { alignItems: "center", marginTop: 40, marginBottom: 60 },
-  addLabel: { fontWeight: "600", marginBottom: 10 },
   addButton: {
+    position: "absolute",
+    bottom: 150, 
+    alignSelf: "center",
     backgroundColor: "#FF6F91",
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: 70,
+    height: 70,
+    borderRadius: 35,
     alignItems: "center",
     justifyContent: "center",
-  },
-  bottomNav: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-    backgroundColor: "#fff",
-    paddingVertical: 10,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    position: "absolute",
-    bottom: 0,
-    width: "100%",
+    elevation: 5,
   },
 });
