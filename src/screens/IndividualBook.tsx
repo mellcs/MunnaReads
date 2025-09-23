@@ -7,9 +7,8 @@ export default function IndividualBook({ route, navigation }: any) {
   const [book, setBook] = useState<any>(null);
   const [imageSize, setImageSize] = useState<{ width: number; height: number } | null>(null);
 
-  const screenWidth = Dimensions.get("window").width - 40; // largura da tela menos padding
+  const screenWidth = Dimensions.get("window").width - 40; 
 
-  // Carregar livro específico
   useEffect(() => {
     const loadBook = async () => {
       try {
@@ -32,7 +31,6 @@ export default function IndividualBook({ route, navigation }: any) {
     loadBook();
   }, [id]);
 
-  // Função excluir
   const deleteBook = async () => {
     Alert.alert("Excluir livro", "Tem certeza que deseja excluir este livro?", [
       { text: "Cancelar", style: "cancel" },
@@ -55,7 +53,6 @@ export default function IndividualBook({ route, navigation }: any) {
     ]);
   };
 
-  // Função editar
   const editBook = () => {
     navigation.navigate("AddBook", { book });
   };
@@ -68,20 +65,18 @@ export default function IndividualBook({ route, navigation }: any) {
     );
   }
 
-  // calcular altura proporcional
-  const imageHeight = imageSize ? (imageSize.height / imageSize.width) * screenWidth : 300; // altura padrão se não houver imagem
+  const imageHeight = imageSize ? (imageSize.height / imageSize.width) * screenWidth : 300; 
 
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        {/* Imagem ou placeholder */}
         {book.image && imageSize ? (
           <Image
             source={{ uri: book.image }}
             style={{
               width: screenWidth,
               height: imageHeight,
-              borderRadius: 16, // cantos arredondados
+              borderRadius: 16, 
               marginBottom: 20,
               alignSelf: "center",
             }}
@@ -94,7 +89,7 @@ export default function IndividualBook({ route, navigation }: any) {
               height: imageHeight,
               borderRadius: 16,
               marginBottom: 20,
-              backgroundColor: "#FFF8E1", // mesma cor do fundo
+              backgroundColor: "#FFF8E1", 
               alignSelf: "center",
             }}
           />
@@ -117,7 +112,6 @@ export default function IndividualBook({ route, navigation }: any) {
         )}
       </ScrollView>
 
-      {/* Botões fixos */}
       <View style={styles.bottomButtons}>
         <TouchableOpacity style={[styles.button, styles.delete]} onPress={deleteBook}>
           <Text style={styles.buttonText}>Excluir</Text>
