@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  Alert,
-} from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity, Alert} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
@@ -57,7 +50,6 @@ export default function Profile({ navigation }: any) {
         const booksArray = JSON.parse(jsonValue);
         setBooksCount(booksArray.length);
 
-        // Somar páginas lidas
         const totalPages = booksArray.reduce(
           (acc: number, book: any) => acc + (parseInt(book.pages) || 0),
           0
@@ -71,7 +63,6 @@ export default function Profile({ navigation }: any) {
 
   return (
     <View style={styles.container}>
-      {/* Imagem de perfil */}
       <TouchableOpacity onPress={pickImage} style={styles.imageWrapper}>
         {profileImage ? (
           <Image source={{ uri: profileImage }} style={styles.profileImage} />
