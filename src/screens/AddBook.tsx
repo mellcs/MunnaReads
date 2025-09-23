@@ -13,7 +13,6 @@ export default function AddBook({ navigation, route }: any) {
   const [pages, setPages] = useState("");
   const [quote, setQuote] = useState("");
 
-  // Preenche dados se for edição
   useEffect(() => {
     if (editingBook) {
       setCover(editingBook.image);
@@ -24,7 +23,6 @@ export default function AddBook({ navigation, route }: any) {
     }
   }, [editingBook]);
 
-  // Selecionar capa
   const selectCover = async () => {
     try {
       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
