@@ -9,50 +9,50 @@ export default function IndividualBook({ route, navigation }: any) {
 
   const screenWidth = Dimensions.get("window").width - 40;
 
-     const favoriteBook = async () => {
-      try {
+  const favoriteBook = async () => {
+    try {
         const favsJson = await AsyncStorage.getItem("@favorites");
         let favs = favsJson ? JSON.parse(favsJson) : [];
 
         const exists = favs.find((f: any) => f.id === book.id);
 
         if (exists) {
-          favs = favs.filter((f: any) => f.id !== book.id);
-        } else {
-          favs.push(book);
-        }
+        favs = favs.filter((f: any) => f.id !== book.id);
+      } else {
+        favs.push(book);
+      }
 
         await AsyncStorage.setItem("@favorites", JSON.stringify(favs));
         Alert.alert(
-          "Favoritos",
-          exists ? "Livro removido dos favoritos" : "Livro adicionado aos favoritos"
-        );
-      } catch (e) {
+        "Favoritos",
+        exists ? "Livro removido dos favoritos" : "Livro adicionado aos favoritos"
+      );
+    } catch (e) {
         console.log("Erro ao favoritar:", e);
       }
     };
 
-  useEffect(() => {
-    const loadBook = async () => {
-      try {
-        const jsonValue = await AsyncStorage.getItem("@books");
-        if (jsonValue) {
-          const books = JSON.parse(jsonValue);
-          const found = books.find((b: any) => b.id === id);
+useEffect(() => {
+  const loadBook = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem("@books");
+      if (jsonValue) {
+        const books = JSON.parse(jsonValue);
+        const found = books.find((b: any) => b.id === id);
           setBook(found);
 
-          if (found?.image) {
+        if (found?.image) {
             Image.getSize(found.image, (width, height) => {
               setImageSize({ width, height });
             });
           }
         }
       } catch (e) {
-        console.log("Erro ao carregar livro:", e);
-      }
+      console.log("Erro ao carregar livro:", e);
+    }
     };
-    loadBook();
-  }, [id]);
+  loadBook();
+}, [id]);
 
   const deleteBook = async () => {
     Alert.alert("Excluir livro", "Tem certeza que deseja excluir este livro?", [
@@ -70,7 +70,7 @@ export default function IndividualBook({ route, navigation }: any) {
             navigation.navigate("Tabs", { screen: "MainScreen" });
           } catch (e) {
             console.log("Erro ao excluir livro:", e);
-          }
+        }
         },
       },
     ]);
@@ -88,9 +88,9 @@ export default function IndividualBook({ route, navigation }: any) {
     );
   }
 
-  const imageHeight = imageSize ? (imageSize.height / imageSize.width) * screenWidth : 300; 
+ const imageHeight = imageSize ? (imageSize.height / imageSize.width) * screenWidth : 300; 
 
-  return (
+   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {book.image && imageSize ? (
@@ -102,8 +102,7 @@ export default function IndividualBook({ route, navigation }: any) {
               borderRadius: 16,
               marginBottom: 20,
               alignSelf: "center",
-            }}
-            resizeMode="contain"
+             }}
           />
         ) : (
           <View
@@ -114,9 +113,9 @@ export default function IndividualBook({ route, navigation }: any) {
               marginBottom: 20,
               backgroundColor: "#FFF8E1", 
               alignSelf: "center",
-            }}
-          />
-        )}
+             }}
+           />
+         )}
 
         <Text style={styles.title}>{book.title}</Text>
         <Text style={styles.info}>
@@ -128,33 +127,33 @@ export default function IndividualBook({ route, navigation }: any) {
 
         {book.quote ? (
           <Text style={styles.quote}>
-            <Text style={{ fontWeight: "bold" }}>Citação:</Text> {book.quote}
-          </Text>
-        ) : (
+             <Text style={{ fontWeight: "bold" }}>Citação:</Text> {book.quote}
+           </Text>
+         ) : (
           <Text style={styles.quote}>Nenhuma citação cadastrada</Text>
-        )}
+         )}
 
-        {book.review ? (
+         {book.review ? (
           <Text style={styles.review}>
-            <Text style={{ fontWeight: "bold" }}>Resenha:</Text> {book.review}
+             <Text style={{ fontWeight: "bold" }}>Resenha:</Text> {book.review}
           </Text>
         ) : (
           <Text style={styles.quote}>Nenhuma resenha cadastrada</Text>
         )}
-      </ScrollView>
+       </ScrollView>
 
       <View style={styles.bottomButtons}>
         <TouchableOpacity style={[styles.button, styles.delete]} onPress={deleteBook}>
-          <Text style={styles.buttonText}>Excluir</Text>
+           <Text style={styles.buttonText}>Excluir</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={[styles.button, styles.edit]} onPress={editBook}>
-          <Text style={styles.buttonText}>Editar</Text>
+           <Text style={styles.buttonText}>Editar</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={[styles.button, styles.favorite]} onPress={favoriteBook}>
           <Text style={styles.buttonText}>♡</Text>
-        </TouchableOpacity>
+         </TouchableOpacity>
       </View>
     </View>
   );

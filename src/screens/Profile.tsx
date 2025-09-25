@@ -50,7 +50,6 @@ export default function Profile({ navigation }: any) {
         const booksArray = JSON.parse(jsonValue);
         setBooksCount(booksArray.length);
 
-        // Somar páginas lidas
         const totalPages = booksArray.reduce(
           (acc: number, book: any) => acc + (parseInt(book.pages) || 0),
           0
