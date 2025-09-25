@@ -10,7 +10,8 @@ Um aplicativo mobile feito em **React Native + Expo**, criado para ajudar leitor
 - 𖦹 **Citações favoritas**: visualize todas as frases marcantes que você salvou.  
 - 𖦹 **Recomendações personalizadas**: integração com **OpenAI** para sugerir novos livros de acordo com suas leituras.  
 - 𖦹 **Perfil do leitor**: gerencie seus dados e acompanhe seu progresso.  
-- 𖦹 **Tela de boas-vindas**: experiência simples e intuitiva para começar.  
+- 𖦹 **Tela de boas-vindas**: experiência simples e intuitiva para começar.
+- 𖦹 **Favoritar livros**: o aplicativo permite selecionar os livros favoritos e exibí-los em uma lista.
 
 ---
 
@@ -68,6 +69,7 @@ MunnaReads/
 │   │   ├── Quotes.tsx
 │   │   ├── Recommendations.tsx
 │   │   ├── Shelf.tsx
+│   │   ├── FavoritesScreen.tsx
 │   │   └── WelcomeScreen.tsx
 │   ├── navigation/
 │   │   └── Routes.tsx
