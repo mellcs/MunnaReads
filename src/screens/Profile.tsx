@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  Alert,
-} from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity, Alert} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
@@ -71,7 +64,6 @@ export default function Profile({ navigation }: any) {
 
   return (
     <View style={styles.container}>
-      {/* Imagem de perfil */}
       <TouchableOpacity onPress={pickImage} style={styles.imageWrapper}>
         {profileImage ? (
           <Image source={{ uri: profileImage }} style={styles.profileImage} />
@@ -105,6 +97,13 @@ export default function Profile({ navigation }: any) {
         <Text style={styles.recommendText}>Recomendações personalizadas</Text>
       </TouchableOpacity>
 
+      <TouchableOpacity
+        style={styles.favoritesButton}
+        onPress={() => navigation.navigate("FavoritesScreen")}
+      >
+        <Text style={styles.recommendText}>Livros favoritados</Text>
+      </TouchableOpacity>
+
       <View style={styles.bottomTab}>
         <TouchableOpacity onPress={() => navigation.navigate("Quotes")}>
           <Ionicons name="star-outline" size={28} color="black" />
@@ -123,7 +122,7 @@ export default function Profile({ navigation }: any) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#FFF3CC", alignItems: "center" },
+  container: { flex: 1, backgroundColor: "#FFF3CC", alignItems: "center", paddingTop: 20 },
   imageWrapper: { marginTop: 50, marginBottom: 20 },
   profileImage: { width: 170, height: 170, borderRadius: 85, marginTop: 50 },
   mockup: {
@@ -155,6 +154,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 12,
     marginTop: 50,
+  },
+  favoritesButton: {
+    backgroundColor: "#F77D8E",
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    borderRadius: 12,
+    marginTop:30,
   },
   recommendText: { color: "white", fontWeight: "bold", fontSize: 16 },
   bottomTab: {

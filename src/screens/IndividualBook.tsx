@@ -7,9 +7,31 @@ export default function IndividualBook({ route, navigation }: any) {
   const [book, setBook] = useState<any>(null);
   const [imageSize, setImageSize] = useState<{ width: number; height: number } | null>(null);
 
-  const screenWidth = Dimensions.get("window").width - 40; // largura da tela menos padding
+  const screenWidth = Dimensions.get("window").width - 40;
 
-  // Carregar livro específico
+     const favoriteBook = async () => {
+      try {
+        const favsJson = await AsyncStorage.getItem("@favorites");
+        let favs = favsJson ? JSON.parse(favsJson) : [];
+
+        const exists = favs.find((f: any) => f.id === book.id);
+
+        if (exists) {
+          favs = favs.filter((f: any) => f.id !== book.id);
+        } else {
+          favs.push(book);
+        }
+
+        await AsyncStorage.setItem("@favorites", JSON.stringify(favs));
+        Alert.alert(
+          "Favoritos",
+          exists ? "Livro removido dos favoritos" : "Livro adicionado aos favoritos"
+        );
+      } catch (e) {
+        console.log("Erro ao favoritar:", e);
+      }
+    };
+
   useEffect(() => {
     const loadBook = async () => {
       try {
@@ -32,7 +54,6 @@ export default function IndividualBook({ route, navigation }: any) {
     loadBook();
   }, [id]);
 
-  // Função excluir
   const deleteBook = async () => {
     Alert.alert("Excluir livro", "Tem certeza que deseja excluir este livro?", [
       { text: "Cancelar", style: "cancel" },
@@ -55,7 +76,6 @@ export default function IndividualBook({ route, navigation }: any) {
     ]);
   };
 
-  // Função editar
   const editBook = () => {
     navigation.navigate("AddBook", { book });
   };
@@ -68,20 +88,18 @@ export default function IndividualBook({ route, navigation }: any) {
     );
   }
 
-  // calcular altura proporcional
-  const imageHeight = imageSize ? (imageSize.height / imageSize.width) * screenWidth : 300; // altura padrão se não houver imagem
+  const imageHeight = imageSize ? (imageSize.height / imageSize.width) * screenWidth : 300; 
 
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        {/* Imagem ou placeholder */}
         {book.image && imageSize ? (
           <Image
             source={{ uri: book.image }}
             style={{
               width: screenWidth,
               height: imageHeight,
-              borderRadius: 16, // cantos arredondados
+              borderRadius: 16,
               marginBottom: 20,
               alignSelf: "center",
             }}
@@ -94,7 +112,7 @@ export default function IndividualBook({ route, navigation }: any) {
               height: imageHeight,
               borderRadius: 16,
               marginBottom: 20,
-              backgroundColor: "#FFF8E1", // mesma cor do fundo
+              backgroundColor: "#FFF8E1", 
               alignSelf: "center",
             }}
           />
@@ -115,9 +133,16 @@ export default function IndividualBook({ route, navigation }: any) {
         ) : (
           <Text style={styles.quote}>Nenhuma citação cadastrada</Text>
         )}
+
+        {book.review ? (
+          <Text style={styles.review}>
+            <Text style={{ fontWeight: "bold" }}>Resenha:</Text> {book.review}
+          </Text>
+        ) : (
+          <Text style={styles.quote}>Nenhuma resenha cadastrada</Text>
+        )}
       </ScrollView>
 
-      {/* Botões fixos */}
       <View style={styles.bottomButtons}>
         <TouchableOpacity style={[styles.button, styles.delete]} onPress={deleteBook}>
           <Text style={styles.buttonText}>Excluir</Text>
@@ -126,17 +151,22 @@ export default function IndividualBook({ route, navigation }: any) {
         <TouchableOpacity style={[styles.button, styles.edit]} onPress={editBook}>
           <Text style={styles.buttonText}>Editar</Text>
         </TouchableOpacity>
+
+        <TouchableOpacity style={[styles.button, styles.favorite]} onPress={favoriteBook}>
+          <Text style={styles.buttonText}>♡</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#FFF8E1" },
+  container: { flex: 1, backgroundColor: "#FFF8E1", paddingTop: 20 },
   scrollContent: { padding: 20, paddingBottom: 100 },
   title: { fontSize: 20, fontWeight: "bold", marginBottom: 5 },
   info: { fontSize: 16, marginBottom: 5 },
   quote: { fontSize: 16, marginTop: 10, color: "#444" },
+  review: { fontSize: 16, marginTop: 10, color: "#444" }, 
   bottomButtons: {
     position: "absolute",
     bottom: 0,
@@ -160,5 +190,6 @@ const styles = StyleSheet.create({
   },
   delete: { backgroundColor: "#FFD18C" },
   edit: { backgroundColor: "#FF6F91" },
+  favorite: { backgroundColor : "#FBB6C1" },
   buttonText: { color: "#fff", fontWeight: "bold", fontSize: 16 },
 });

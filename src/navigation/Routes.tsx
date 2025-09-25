@@ -12,6 +12,7 @@ import Quotes from "../screens/Quotes";
 import Profile from "../screens/Profile";
 import IndividualBook from "../screens/IndividualBook"
 import Recommendations from "../screens/Recommendations"
+import FavoritesScreen from "../screens/FavoritesScreen"
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -75,6 +76,7 @@ export default function Routes() {
         <Stack.Screen name="Quotes" component={Quotes} />
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="Recommendations" component={Recommendations} />
+        <Stack.Screen name="FavoritesScreen" component={FavoritesScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

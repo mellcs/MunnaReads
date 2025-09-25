@@ -12,8 +12,8 @@ export default function AddBook({ navigation, route }: any) {
   const [author, setAuthor] = useState("");
   const [pages, setPages] = useState("");
   const [quote, setQuote] = useState("");
+  const [review, setReview] = useState("");
 
-  // Preenche dados se for edição
   useEffect(() => {
     if (editingBook) {
       setCover(editingBook.image);
@@ -21,10 +21,10 @@ export default function AddBook({ navigation, route }: any) {
       setAuthor(editingBook.author);
       setPages(editingBook.pages);
       setQuote(editingBook.quote);
+      setReview(editingBook.review)
     }
   }, [editingBook]);
 
-  // Selecionar capa
   const selectCover = async () => {
     try {
       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -65,6 +65,7 @@ export default function AddBook({ navigation, route }: any) {
                 author,
                 pages,
                 quote,
+                review,
                 image: cover || "https://via.placeholder.com/140.png?text=Sem+Capa",
               }
             : book
@@ -79,6 +80,7 @@ export default function AddBook({ navigation, route }: any) {
           author,
           pages,
           quote,
+          review,
           image: cover || "https://via.placeholder.com/140.png?text=Sem+Capa",
         };
         const updatedBooks = [...existingBooks, newBook];
@@ -133,6 +135,13 @@ export default function AddBook({ navigation, route }: any) {
           onChangeText={setQuote}
           multiline
         />
+        <TextInput
+          style={styles.input}
+          placeholder="Resenha (opcional)"
+          value={review}
+          onChangeText={setReview}
+          multiline
+        />
 
         <TouchableOpacity style={styles.submitButton} onPress={saveBook}>
           <Text style={styles.submitButtonText}>
@@ -145,7 +154,7 @@ export default function AddBook({ navigation, route }: any) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#FFF3CC" },
+  container: { flex: 1, backgroundColor: "#FFF3CC", paddingTop: 20 },
   scrollContainer: { padding: 20, paddingTop: 80, alignItems: "center" },
   header: { fontSize: 24, fontWeight: "bold", marginBottom: 20 },
   coverButton: {
